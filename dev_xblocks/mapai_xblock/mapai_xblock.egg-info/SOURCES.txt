@@ -1,0 +1,13 @@
+README.md
+setup.py
+mapai_xblock/__init__.py
+mapai_xblock/mapai.py
+mapai_xblock.egg-info/PKG-INFO
+mapai_xblock.egg-info/SOURCES.txt
+mapai_xblock.egg-info/dependency_links.txt
+mapai_xblock.egg-info/entry_points.txt
+mapai_xblock.egg-info/requires.txt
+mapai_xblock.egg-info/top_level.txt
+mapai_xblock/static/mapai/public/mapai.css
+mapai_xblock/static/mapai/public/mapai.html
+mapai_xblock/static/mapai/public/mapai.js

@@ -1,0 +1,8 @@
+Metadata-Version: 2.1
+Name: mapai-xblock
+Version: 0.1
+Summary: XBlock con evaluación automática de mapas conceptuales usando Gemini AI
+Author: Andrés Pabón
+License: MIT
+Requires-Dist: XBlock
+Requires-Dist: requests

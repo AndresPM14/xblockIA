@@ -1,0 +1,2 @@
+[xblock.v1]
+mapai_xblock = mapai_xblock.mapai:MapAiXBlock

@@ -1,0 +1,38 @@
+<div class="mapai-wrap">
+
+    <h3>Evaluador IA — MapAI</h3>
+
+    <!-- API KEY -->
+    <div id="api-key-box">
+        <label for="mapai-api-key"><strong>API Key de Gemini</strong></label>
+        <input type="password" id="mapai-api-key" placeholder="Ingresa tu API Key">
+    </div>
+
+    <!-- SUBIR IMAGEN -->
+    <div id="uploader">
+        <input type="file" id="mapai-file" accept="image/*">
+        <button id="mapai-upload">Subir imagen</button>
+    </div>
+
+    <!-- PREVIEW -->
+    <div id="preview" style="display:none;">
+        <img id="mapai-preview-img" src="" alt="Vista previa">
+        <button id="mapai-eval">Evaluar con IA</button>
+    </div>
+
+    <!-- LOADING -->
+    <div id="loading" style="display:none; text-align:center; margin-top:15px;">
+        <p><em>Evaluando imagen, por favor espera...</em></p>
+    </div>
+
+    <!-- RESULTADOS -->
+    <div id="result" style="display:none;">
+        <h4>Resultados</h4>
+
+        <div id="mapai-scores"></div>
+        <div id="mapai-grade"></div>
+        <div id="mapai-comment"></div>
+    </div>
+
+</div>
+

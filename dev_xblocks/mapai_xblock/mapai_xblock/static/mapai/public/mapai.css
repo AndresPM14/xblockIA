@@ -1,0 +1,137 @@
+/* === CONTENEDOR GENERAL === */
+.mapai-wrap {
+    border: 2px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 20px;
+    max-width: 650px;
+    margin: 20px auto;
+    background-color: #fafafa;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    font-family: "Open Sans", Arial, sans-serif;
+    color: #333;
+}
+
+.mapai-wrap h3 {
+    text-align: center;
+    color: #2c3e50;
+    margin-bottom: 20px;
+}
+
+/* === API KEY === */
+#api-key-box {
+    margin-bottom: 20px;
+}
+
+#api-key-box input {
+    width: 100%;
+    padding: 8px;
+    border-radius: 6px;
+    border: 1px solid #bbb;
+    margin-top: 5px;
+    font-size: 14px;
+}
+
+/* === SUBIR IMAGEN === */
+#uploader {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+#mapai-file {
+    margin-bottom: 10px;
+}
+
+#mapai-upload {
+    background-color: #3498db;
+    color: #fff;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: 0.3s;
+}
+
+#mapai-upload:hover {
+    background-color: #2c80b4;
+}
+
+/* === PREVISUALIZACIÓN === */
+#preview {
+    text-align: center;
+    margin-top: 15px;
+}
+
+#mapai-preview-img {
+    max-width: 100%;
+    max-height: 300px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    margin-bottom: 10px;
+}
+
+#mapai-eval {
+    background-color: #27ae60;
+    color: #fff;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: 0.3s;
+}
+
+#mapai-eval:hover {
+    background-color: #1e8449;
+}
+
+/* === RESULTADOS === */
+#result {
+    margin-top: 20px;
+    background-color: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    padding: 15px;
+}
+
+#result h4 {
+    color: #2c3e50;
+    border-bottom: 2px solid #3498db;
+    padding-bottom: 5px;
+    margin-bottom: 10px;
+}
+
+#mapai-scores ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#mapai-scores li {
+    background-color: #f5f7fa;
+    border-radius: 6px;
+    padding: 6px 10px;
+    margin-bottom: 5px;
+}
+
+#mapai-grade {
+    font-weight: bold;
+    color: #16a085;
+    margin-top: 10px;
+}
+
+#mapai-comment {
+    margin-top: 10px;
+    font-style: italic;
+    color: #555;
+}
+
+/* === ALERTAS / ERRORES === */
+p[style*="color:red"] {
+    font-weight: bold;
+    text-align: center;
+    margin-top: 10px;
+}
+
