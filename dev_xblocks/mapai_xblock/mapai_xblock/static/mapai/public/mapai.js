@@ -114,7 +114,8 @@ function MapAiXBlock(runtime, element) {
                     return;
                 }
 
-                const scores = response.scores || {};
+                const feedback = response.feedback || response;  // Compatibilidad
+                const scores = feedback.scores || {};
                 let html = "<ul>";
                 for (const [name, val] of Object.entries(scores)) {
                     html += `<li><strong>${name}:</strong> ${val.toFixed(2)}</li>`;
@@ -123,13 +124,13 @@ function MapAiXBlock(runtime, element) {
                 scoresDiv.innerHTML = html;
 
                 gradeDiv.innerHTML = `
-                    <p><strong>Promedio:</strong> ${response.average.toFixed(2)}</p>
+                    <p><strong>Promedio:</strong> ${feedback.average.toFixed(2)}</p>
                 `;
 
                 commentDiv.innerHTML = `
                     <p><em>Comentario de la IA:</em></p>
                     <div style="white-space:pre-wrap; background:#f7f7f7; padding:8px; border-radius:6px;">
-                        ${response.comment}
+                        ${feedback.comment}
                     </div>
                 `;
             },

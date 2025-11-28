@@ -5,7 +5,7 @@
     <!-- API KEY -->
     <div id="api-key-box">
         <label for="mapai-api-key"><strong>API Key de Gemini</strong></label>
-        <input type="password" id="mapai-api-key" placeholder="Ingresa tu API Key">
+        <input type="password" id="mapai-api-key" placeholder="sk-..." required>
     </div>
 
     <!-- SUBIR IMAGEN -->
@@ -24,6 +24,9 @@
     <div id="loading" style="display:none; text-align:center; margin-top:15px;">
         <p><em>Evaluando imagen, por favor espera...</em></p>
     </div>
+
+    <!-- MENSAJE DE ERROR -->
+    <div id="error-message" style="display:none; color:red; background:#ffe0e0; padding:10px; border-radius:6px; margin-top:15px;"></div>
 
     <!-- RESULTADOS -->
     <div id="result" style="display:none;">
