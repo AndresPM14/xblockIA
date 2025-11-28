@@ -19,7 +19,27 @@ def json_handler(func):
 
     def wrapper(self, request, suffix=''):
         try:
-            data = request.json if hasattr(request, "json") else request
+            # Intentamos obtener un dict desde el request (WebOb Request)
+            # Primero, si el objeto ya expone 'json', úsalo (compatibilidad)
+            if hasattr(request, "json"):
+                data = request.json
+            else:
+                # Si no, intentamos parsear el body como JSON
+                try:
+                    body = request.body if hasattr(request, 'body') else None
+                    if body:
+                        # body viene como bytes
+                        data = json.loads(body.decode('utf-8'))
+                    else:
+                        # Fallback a parámetros (form/query)
+                        data = {}
+                        if hasattr(request, 'params'):
+                            # request.params es un dict-like
+                            data.update({k: request.params.get(k) for k in request.params})
+                except Exception:
+                    # No se pudo parsear: pasamos un dict vacío para evitar fallos
+                    data = {}
+
             result = func(self, data, suffix)
             return Response(
                 json.dumps(result),
@@ -27,6 +47,7 @@ def json_handler(func):
                 status=200
             )
         except Exception as e:
+            # Registrar y devolver error JSON
             print("ERROR en handler:", str(e))
             return Response(
                 json.dumps({"error": str(e)}),
