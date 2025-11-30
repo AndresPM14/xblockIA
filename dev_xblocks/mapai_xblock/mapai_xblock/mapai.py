@@ -1,11 +1,13 @@
 import json
 import requests
+import logging
 from xblock.core import XBlock
 from xblock.fields import Scope, String, Float, Dict
 from xblock.fragment import Fragment
 from webob import Response
 from xblockutils.resources import ResourceLoader
 
+logger = logging.getLogger(__name__)
 
 # ==============================================================
 # XBLOCK PRINCIPAL
@@ -50,46 +52,69 @@ class MapAiXBlock(XBlock):
     def upload_image(self, request):
         """Recibe imagen en base64 y la guarda en el estado"""
         try:
+            logger.info("=== upload_image handler iniciado ===")
+            
             data = request.json_body if hasattr(request, 'json_body') else {}
+            logger.info(f"Data recibida: {list(data.keys())}")
+            
             image_b64 = data.get('image_b64', '')
             
             if not image_b64:
+                logger.warning("No image provided in request")
                 return {'error': 'No image provided'}
             
+            logger.info(f"Imagen recibida: {len(image_b64)} caracteres")
             self.student_image = image_b64
+            logger.info("Imagen guardada en estado")
+            
             return {'success': True, 'message': 'Image uploaded successfully'}
         
         except Exception as e:
+            logger.exception(f"Error en upload_image: {str(e)}")
             return {'error': str(e)}
 
     @XBlock.json_handler
     def evaluate(self, request):
         """Evalúa el mapa conceptual usando Gemini"""
         try:
+            logger.info("=== evaluate handler iniciado ===")
+            
             data = request.json_body if hasattr(request, 'json_body') else {}
+            logger.info(f"Data recibida: {list(data.keys())}")
+            
             api_key = data.get('api_key', '')
             image_b64 = data.get('image_b64') or self.student_image
             
+            logger.info(f"API Key present: {bool(api_key)}")
+            logger.info(f"Image present: {bool(image_b64)}")
+            
             if not api_key:
+                logger.warning("API key missing")
                 return {'error': 'API key is required'}
             
             if not image_b64:
+                logger.warning("Image missing")
                 return {'error': 'No image to evaluate'}
             
+            logger.info("Llamando a Gemini...")
             # Llamar a Gemini
             response = self._call_model(image_b64, api_key)
+            logger.info("Respuesta de Gemini recibida")
             
             # Normalizar respuesta
             normalized = self._normalize_gemini_response(response)
+            logger.info(f"Respuesta normalizada: {list(normalized.keys())}")
             
             # Guardar resultados
             self.ai_feedback = normalized
             self.average_score = normalized.get('average', 0.0)
+            logger.info(f"Resultados guardados. Score promedio: {self.average_score}")
             
             # Retornar directamente (sin 'success' ni 'feedback')
             return normalized
         
         except Exception as e:
+            logger.exception(f"Error en evaluate: {str(e)}")
             return {'error': str(e)}
 
     # ==============================================================
@@ -97,6 +122,8 @@ class MapAiXBlock(XBlock):
     # ==============================================================
     def _call_model(self, image_b64, api_key):
         """Llamada HTTP directa a API de Gemini 2.0 Flash"""
+        
+        logger.info(f"_call_model iniciado. Tamaño imagen: {len(image_b64)}")
         
         if not image_b64 or len(image_b64) < 100:
             raise Exception("Invalid or empty image")
@@ -137,15 +164,21 @@ class MapAiXBlock(XBlock):
         }
 
         try:
+            logger.info(f"Enviando solicitud a Gemini: {endpoint}")
             response = requests.post(endpoint, headers=headers, json=payload, timeout=60)
+            logger.info(f"Respuesta status: {response.status_code}")
             response.raise_for_status()
             return response.json()
         
         except requests.exceptions.Timeout:
+            logger.error("API request timeout")
             raise Exception("API request timeout (60s)")
         except requests.exceptions.HTTPError as e:
-            raise Exception(f"API error {response.status_code}: {response.text}")
+            error_msg = f"API error {response.status_code}: {response.text}"
+            logger.error(error_msg)
+            raise Exception(error_msg)
         except Exception as e:
+            logger.exception(f"Error en _call_model: {str(e)}")
             raise Exception(f"Failed to call Gemini API: {str(e)}")
 
     # ==============================================================
@@ -154,6 +187,8 @@ class MapAiXBlock(XBlock):
     def _normalize_gemini_response(self, resp):
         """Extrae y normaliza la respuesta de Gemini"""
         try:
+            logger.info("Normalizando respuesta de Gemini...")
+            
             # Gemini devuelve en candidates[0].content.parts[0].text
             if 'candidates' not in resp or not resp['candidates']:
                 raise ValueError("No candidates in response")
@@ -163,6 +198,7 @@ class MapAiXBlock(XBlock):
                 raise ValueError("No content in candidate")
             
             text = candidate['content']['parts'][0].get('text', '')
+            logger.info(f"Texto recibido: {text[:100]}...")
             
             # Extraer JSON del texto (a veces viene con markdown)
             if '```json' in text:
@@ -172,19 +208,25 @@ class MapAiXBlock(XBlock):
             
             # Parsear JSON
             data = json.loads(text.strip())
+            logger.info(f"JSON parseado correctamente")
             
             # Validar estructura
             if 'scores' not in data or 'average' not in data:
                 raise ValueError("Invalid response structure")
             
-            return {
+            result = {
                 'scores': data.get('scores', {}),
                 'average': float(data.get('average', 0.0)),
                 'comment': data.get('comment', '')
             }
+            
+            logger.info(f"Normalización completada: {result}")
+            return result
         
         except json.JSONDecodeError as e:
+            logger.exception(f"JSON parsing error: {str(e)}")
             raise Exception(f"Failed to parse Gemini response as JSON: {str(e)}")
         except Exception as e:
+            logger.exception(f"Normalization error: {str(e)}")
             raise Exception(f"Failed to normalize response: {str(e)}")
 
