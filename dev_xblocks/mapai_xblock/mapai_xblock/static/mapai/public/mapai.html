@@ -1,38 +1,66 @@
 <div class="mapai-wrap">
-
-    <h3>Evaluador IA — MapAI</h3>
-
-    <!-- API KEY -->
-    <div id="api-key-box">
-        <label for="mapai-api-key"><strong>API Key de Gemini</strong></label>
-        <input type="password" id="mapai-api-key" placeholder="Ingresa tu API Key">
+    <h3>🗺️ Evaluador IA de Mapas Conceptuales</h3>
+    
+    <!-- ADVERTENCIA SI NO HAY API KEY -->
+    <div id="api-warning" style="display: none; background:#f8d7da; padding:15px; border-radius:8px; margin-bottom:20px; border-left: 4px solid #dc3545;">
+        <p style="color:#721c24; margin:0; font-weight:bold;">
+            ⚠️ El profesor aún no ha configurado la API Key de Gemini. 
+            Por favor, contacta a tu instructor.
+        </p>
     </div>
-
+    
+    <!-- INSTRUCCIONES -->
+    <div style="background:#e7f3ff; padding:15px; border-radius:8px; margin-bottom:20px; border-left: 4px solid #0066cc;">
+        <p style="color:#004085; margin:0;">
+            📝 <strong>Instrucciones:</strong> Sube una imagen de tu mapa conceptual y la IA lo evaluará automáticamente.
+        </p>
+    </div>
+    
     <!-- SUBIR IMAGEN -->
     <div id="uploader">
-        <input type="file" id="mapai-file" accept="image/*">
-        <button id="mapai-upload">Subir imagen</button>
+        <label for="mapai-file"><strong>1️⃣ Selecciona tu mapa conceptual:</strong></label>
+        <input type="file" id="mapai-file" accept="image/*" style="display:block; margin:10px 0;">
+        <button id="mapai-upload" style="padding:8px 16px; background:#28a745; color:white; border:none; border-radius:4px; cursor:pointer;">
+            📤 Subir imagen
+        </button>
     </div>
-
+    
     <!-- PREVIEW -->
-    <div id="preview" style="display:none;">
-        <img id="mapai-preview-img" src="" alt="Vista previa">
-        <button id="mapai-eval">Evaluar con IA</button>
+    <div id="preview" style="display:none; margin-top:20px; text-align:center;">
+        <h4>2️⃣ Vista previa de tu mapa:</h4>
+        <img id="mapai-preview-img" src="" alt="Vista previa" style="max-width:100%; border:2px solid #ccc; border-radius:8px; margin:10px 0;">
+        <br>
+        <button id="mapai-eval" style="padding:10px 20px; background:#17a2b8; color:white; border:none; border-radius:4px; cursor:pointer; font-size:16px;">
+            🤖 Evaluar con IA
+        </button>
     </div>
-
+    
     <!-- LOADING -->
     <div id="loading" style="display:none; text-align:center; margin-top:15px;">
-        <p><em>Evaluando imagen, por favor espera...</em></p>
+        <p style="font-size:16px; color:#666;">
+            ⏳ <em>Evaluando tu mapa conceptual con inteligencia artificial...</em>
+        </p>
+        <p style="font-size:14px; color:#999;">
+            Esto puede tomar unos segundos
+        </p>
     </div>
-
+    
     <!-- RESULTADOS -->
-    <div id="result" style="display:none;">
-        <h4>Resultados</h4>
-
-        <div id="mapai-scores"></div>
-        <div id="mapai-grade"></div>
-        <div id="mapai-comment"></div>
+    <div id="result" style="display:none; margin-top:30px; padding:20px; background:#f8f9fa; border-radius:8px; border-left:4px solid #28a745;">
+        <h4 style="color:#28a745;">📊 Resultados de la Evaluación</h4>
+        <div id="mapai-grade" style="font-size:1.3em; margin:10px 0;"></div>
+        <div id="mapai-scores" style="margin:15px 0;"></div>
+        <div id="mapai-comment" style="margin-top:15px;"></div>
     </div>
-
 </div>
 
+<script>
+    // Mostrar advertencia si no hay API Key configurada
+    // Este valor es inyectado desde Python
+    var hasApiKey = {HAS_API_KEY};
+    if (!hasApiKey) {
+        document.getElementById('api-warning').style.display = 'block';
+        document.getElementById('uploader').style.opacity = '0.5';
+        document.getElementById('uploader').style.pointerEvents = 'none';
+    }
+</script>
